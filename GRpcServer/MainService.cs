@@ -6,7 +6,12 @@ namespace GRpcServer
 {
     public class MainService : Game.GameBase
     {
-        SamplePlayerAgent _agent = new();
+        private static SamplePlayerAgent _agent = new();
+
+        public MainService()
+        {
+            Console.WriteLine("MainService created");
+        }
         public override Task<Actions> GetActions(State request, ServerCallContext context)
         {
             return _agent.GetActions(request);
