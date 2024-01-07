@@ -2,7 +2,7 @@
 using Grpc.Core;
 using Microsoft.Extensions.Options;
 using System;
-using Action = CyrusGrpc.Action;
+//using Action = CyrusGrpc.PlayerAction;
 
 namespace GRpcServer
 {
@@ -34,12 +34,12 @@ namespace GRpcServer
             _playerTypes[playerType.Id] = playerType;
         }
 
-        public Task<Actions> GetActions(State request)
+        public Task<PlayerActions> GetActions(State request)
         {
-            Actions actions = new();
+            PlayerActions actions = new();
             if (request.WorldModel.Self.IsGoalie)
             {
-                actions.Actions_.Add(new Action
+                actions.Actions.Add(new PlayerAction
                 {
                     HeliosGoalie = new HeliosGoalie()
                 });
@@ -48,7 +48,7 @@ namespace GRpcServer
             {
                 if (request.WorldModel.Self.IsKickable)
                 {
-                    actions.Actions_.Add(new Action
+                    actions.Actions.Add(new PlayerAction
                     {
                         HeliosChainAction = new HeliosChainAction
                         {
@@ -66,7 +66,7 @@ namespace GRpcServer
                 }
                 else
                 {
-                    actions.Actions_.Add(new Action
+                    actions.Actions.Add(new PlayerAction
                     {
                         HeliosBasicMove = new HeliosBasicMove()
                     });
@@ -74,14 +74,14 @@ namespace GRpcServer
             }
             else if (request.WorldModel.IsPenaltyKickMode)
             {
-                actions.Actions_.Add(new Action
+                actions.Actions.Add(new PlayerAction
                 {
                     HeliosPenalty = new HeliosPenalty()
                 });
             }
             else
             {
-                actions.Actions_.Add(new Action
+                actions.Actions.Add(new PlayerAction
                 {
                     HeliosSetPlay = new HeliosSetPlay()
                 });

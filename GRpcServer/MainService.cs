@@ -12,9 +12,29 @@ namespace GRpcServer
         {
             Console.WriteLine("MainService created");
         }
-        public override Task<Actions> GetActions(State request, ServerCallContext context)
+
+        public override Task<PlayerActions> GetPlayerActions(State request, ServerCallContext context)
         {
             return _agent.GetActions(request);
+        }
+
+        public override Task<CoachActions> GetCoachActions(State request, ServerCallContext context)
+        {
+            CoachActions actions = new();
+            actions.Actions.Add(new CoachAction
+            {
+                DoHeliosSayPlayerTypes = new DoHeliosSayPlayerTypes()
+            });
+            actions.Actions.Add(new CoachAction
+            {
+                DoHeliosSubstitute = new DoHeliosSubstitute()
+            });
+            return Task.FromResult(actions);
+        }
+
+        public override Task<TrainerActions> GetTrainerActions(State request, ServerCallContext context)
+        {
+            return base.GetTrainerActions(request, context);
         }
 
         public override Task<Empty> SendInitMessage(InitMessage request, ServerCallContext context)
