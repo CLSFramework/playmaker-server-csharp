@@ -1,35 +1,53 @@
-//using GRpcServer;
-
-//var builder = WebApplication.CreateBuilder(args);
-
-//// Add services to the container.
-//builder.Services.AddGrpc();
-////grpc listen port 50051
-
-//var app = builder.Build();
-
-//// Configure the HTTP request pipeline.
-//app.MapGrpcService<MainService>();
-//app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
-
-//app.Run();
-
-
+using CommandLine;
 using CyrusGrpc;
 using Grpc.Core;
-using GRpcServer;
 
-class Program
+namespace GRpcServer;
+
+internal class Program
 {
-    static void Main(string[] args)
+    private static void Main(string[] args)
     {
-        const int gRpcPort = 50051;
-        var server = new Server
+        var gRpcPort = 50051;
+        var diffPort = false;
+        Parser.Default.ParseArguments<Options>(args)
+            .WithParsed(o =>
+            {
+                gRpcPort = o.GRpcPort;
+                if (o.RightPort)
+                {
+                    gRpcPort += 20;
+                }
+
+                if (o.DiffPort)
+                {
+                    diffPort = true;
+                }
+            });
+
+        List<Server> servers = new();
+        if (!diffPort)
         {
-            Services = { Game.BindService(new MainService()) },
-            Ports = { new ServerPort("localhost", gRpcPort, ServerCredentials.Insecure) }
-        };
-        server.Start();
+            servers.Add(new Server
+            {
+                Services = { Game.BindService(new MainService()) },
+                Ports = { new ServerPort("localhost", gRpcPort, ServerCredentials.Insecure) }
+            });
+        }
+        else
+        {
+            for (var i = 1; i <= 13; i++)
+            {
+                servers.Add(new Server
+                {
+                    Services = { Game.BindService(new MainService()) },
+                    Ports = { new ServerPort("localhost", gRpcPort + i - 1, ServerCredentials.Insecure) }
+                });
+            }
+        }
+
+        servers.ForEach(s => s.Start());
+
         Console.ReadLine();
     }
 }
