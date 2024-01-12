@@ -7,7 +7,7 @@ public abstract class SampleAgent
 {
     protected ServerParam ServerParam = null!;
     protected PlayerParam PlayerParam = null!;
-    protected readonly Dictionary<int, PlayerType> PlayerTypes = null!;
+    protected readonly Dictionary<int, PlayerType> PlayerTypes = new();
     protected bool Debug;
 
     public void SetServerParam(ServerParam serverParam)
@@ -22,7 +22,7 @@ public abstract class SampleAgent
 
     public void SetPlayerType(PlayerType playerType)
     {
-        PlayerTypes[playerType.Id] = playerType;
+        PlayerTypes.TryAdd(playerType.Id, playerType);
     }
 
     public void SetDebug(bool debug)
