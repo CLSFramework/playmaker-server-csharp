@@ -24,29 +24,20 @@ internal class Program
                     diffPort = true;
                 }
             });
-
-        List<Server> servers = new();
+        List<SampleAgent> agents = new();
         if (!diffPort)
         {
-            servers.Add(new Server
-            {
-                Services = { Game.BindService(new MainService()) },
-                Ports = { new ServerPort("localhost", gRpcPort, ServerCredentials.Insecure) }
-            });
+            agents.Add(new SampleAgent("0.0.0.0", gRpcPort));
         }
         else
         {
-            for (var i = 1; i <= 13; i++)
+            for (var i = 1; i <= 11; i++)
             {
-                servers.Add(new Server
-                {
-                    Services = { Game.BindService(new MainService()) },
-                    Ports = { new ServerPort("localhost", gRpcPort + i - 1, ServerCredentials.Insecure) }
-                });
+                agents.Add(new SampleAgent("0.0.0.0", gRpcPort + i - 1));
             }
+            agents.Add(new SampleAgent("0.0.0.0", gRpcPort + 12 - 1));
+            agents.Add(new SampleAgent("0.0.0.0", gRpcPort + 13 - 1));
         }
-
-        servers.ForEach(s => s.Start());
 
         Console.ReadLine();
     }
