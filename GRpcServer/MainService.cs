@@ -31,6 +31,7 @@ namespace GRpcServer
 
         public override Task<Empty> SendInitMessage(InitMessage request, ServerCallContext context)
         {
+            Console.WriteLine("SendInitMessage");
             _sampleAgent.SetDebug(request.DebugMode);
             return Task.FromResult(new Empty());
         }
@@ -54,6 +55,12 @@ namespace GRpcServer
             Console.WriteLine("SendServerParams");
             _sampleAgent.SetServerParam(request);
             return Task.FromResult(new Empty());
+        }
+
+        public override Task<InitMessageFromServer> GetInitMessage(Empty request, ServerCallContext context)
+        {
+            Console.WriteLine("GetInitMessage");
+            return Task.FromResult(new InitMessageFromServer());
         }
     }
 }

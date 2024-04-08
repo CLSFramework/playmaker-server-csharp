@@ -14,6 +14,7 @@ public class SampleAgent
 
     public SampleAgent(string ip, int port)
     {
+        Console.WriteLine($"Creating Sample Agent ip:{ip} port:{port}");
         this.server = new Server
         {
             Services = { Game.BindService(new MainService(this)) },
@@ -21,6 +22,7 @@ public class SampleAgent
         };
         this.server.Start();
     }
+
     public void SetServerParam(ServerParam serverParam)
     {
         ServerParam = serverParam;
