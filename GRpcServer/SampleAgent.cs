@@ -1,6 +1,5 @@
-﻿using CyrusGrpc;
+﻿using CLSF;
 using Grpc.Core;
-
 
 namespace GRpcServer;
 
@@ -58,7 +57,7 @@ public class SampleAgent
             if (request.WorldModel.Self.IsKickable)
                 actions.Actions.Add(new PlayerAction
                 {
-                    HeliosChainAction = new HeliosChainAction
+                    HeliosOffensivePlanner = new HeliosOffensivePlanner
                     {
                         Cross = true,
                         DirectPass = true,
@@ -117,8 +116,8 @@ public class SampleAgent
         {
             DoMoveBall = new DoMoveBall
             {
-                Position = new Vector2D { X = 0, Y = 0 },
-                Velocity = new Vector2D { X = 0, Y = 0 }
+                Position = new RpcVector2D { X = 0, Y = 0 },
+                Velocity = new RpcVector2D { X = 0, Y = 0 }
             }
         });
 

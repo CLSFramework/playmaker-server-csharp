@@ -1,6 +1,4 @@
 using CommandLine;
-using CyrusGrpc;
-using Grpc.Core;
 
 namespace GRpcServer;
 

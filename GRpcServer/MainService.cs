@@ -1,6 +1,5 @@
-﻿using CyrusGrpc;
+﻿using CLSF;
 using Grpc.Core;
-using System;
 
 namespace GRpcServer
 {
@@ -57,10 +56,20 @@ namespace GRpcServer
             return Task.FromResult(new Empty());
         }
 
-        public override Task<InitMessageFromServer> GetInitMessage(Empty request, ServerCallContext context)
+        public override Task<RegisterResponse> Register(RegisterRequest request, ServerCallContext context)
         {
-            Console.WriteLine("GetInitMessage");
-            return Task.FromResult(new InitMessageFromServer());
+            return base.Register(request, context);
+        }
+
+        public override Task<Empty> SendByeCommand(RegisterResponse request, ServerCallContext context)
+        {
+            return base.SendByeCommand(request, context);
+        }
+
+        public override Task<BestPlannerActionResponse> GetBestPlannerAction(BestPlannerActionRequest request,
+            ServerCallContext context)
+        {
+            return base.GetBestPlannerAction(request, context);
         }
     }
 }
