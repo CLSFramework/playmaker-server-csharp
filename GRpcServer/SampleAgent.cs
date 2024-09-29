@@ -1,5 +1,4 @@
 ﻿using CLSF;
-using Grpc.Core;
 
 namespace GRpcServer;
 
@@ -9,17 +8,18 @@ public class SampleAgent
     protected PlayerParam PlayerParam = null!;
     protected readonly Dictionary<int, PlayerType> PlayerTypes = new();
     protected bool Debug;
-    private Server server;
+    public AgentType AgentType { get; }
+    public int RpcVersion { get; }
+    public string TeamName { get; }
+    public int UniformNumber { get; }
 
-    public SampleAgent(string ip, int port)
+    public SampleAgent(RegisterRequest request)
     {
-        Console.WriteLine($"Creating Sample Agent ip:{ip} port:{port}");
-        this.server = new Server
-        {
-            Services = { Game.BindService(new MainService(this)) },
-            Ports = { new ServerPort(ip, port, ServerCredentials.Insecure) }
-        };
-        this.server.Start();
+        Console.WriteLine("Creating Sample Agent");
+        AgentType = request.AgentType;
+        RpcVersion = request.RpcVersion;
+        TeamName = request.TeamName;
+        UniformNumber = request.UniformNumber;
     }
 
     public void SetServerParam(ServerParam serverParam)
@@ -69,6 +69,7 @@ public class SampleAgent
                         SimpleDribble = true,
                         SimpleShoot = true
                     }
+                    //HeliosShoot = new HeliosShoot()
                 });
             else
                 actions.Actions.Add(new PlayerAction
