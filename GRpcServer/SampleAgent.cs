@@ -1,6 +1,4 @@
-﻿using CyrusGrpc;
-using Grpc.Core;
-
+﻿using CLSF;
 
 namespace GRpcServer;
 
@@ -10,17 +8,18 @@ public class SampleAgent
     protected PlayerParam PlayerParam = null!;
     protected readonly Dictionary<int, PlayerType> PlayerTypes = new();
     protected bool Debug;
-    private Server server;
+    public AgentType AgentType { get; }
+    public int RpcVersion { get; }
+    public string TeamName { get; }
+    public int UniformNumber { get; }
 
-    public SampleAgent(string ip, int port)
+    public SampleAgent(RegisterRequest request)
     {
-        Console.WriteLine($"Creating Sample Agent ip:{ip} port:{port}");
-        this.server = new Server
-        {
-            Services = { Game.BindService(new MainService(this)) },
-            Ports = { new ServerPort(ip, port, ServerCredentials.Insecure) }
-        };
-        this.server.Start();
+        Console.WriteLine("Creating Sample Agent");
+        AgentType = request.AgentType;
+        RpcVersion = request.RpcVersion;
+        TeamName = request.TeamName;
+        UniformNumber = request.UniformNumber;
     }
 
     public void SetServerParam(ServerParam serverParam)
@@ -58,7 +57,7 @@ public class SampleAgent
             if (request.WorldModel.Self.IsKickable)
                 actions.Actions.Add(new PlayerAction
                 {
-                    HeliosChainAction = new HeliosChainAction
+                    HeliosOffensivePlanner = new HeliosOffensivePlanner
                     {
                         Cross = true,
                         DirectPass = true,
@@ -70,6 +69,7 @@ public class SampleAgent
                         SimpleDribble = true,
                         SimpleShoot = true
                     }
+                    //HeliosShoot = new HeliosShoot()
                 });
             else
                 actions.Actions.Add(new PlayerAction
@@ -117,8 +117,8 @@ public class SampleAgent
         {
             DoMoveBall = new DoMoveBall
             {
-                Position = new Vector2D { X = 0, Y = 0 },
-                Velocity = new Vector2D { X = 0, Y = 0 }
+                Position = new RpcVector2D { X = 0, Y = 0 },
+                Velocity = new RpcVector2D { X = 0, Y = 0 }
             }
         });
 
