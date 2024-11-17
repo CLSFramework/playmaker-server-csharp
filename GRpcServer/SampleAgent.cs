@@ -55,6 +55,11 @@ public class SampleAgent
         else if (request.WorldModel.GameModeType == GameModeType.PlayOn)
         {
             if (request.WorldModel.Self.IsKickable)
+            {
+                actions.Actions.Add(new PlayerAction
+                {
+                    HeliosShoot = new HeliosShoot()
+                });
                 actions.Actions.Add(new PlayerAction
                 {
                     HeliosOffensivePlanner = new HeliosOffensivePlanner
@@ -69,13 +74,15 @@ public class SampleAgent
                         SimpleDribble = true,
                         SimpleShoot = true
                     }
-                    //HeliosShoot = new HeliosShoot()
                 });
+            }
             else
+            {
                 actions.Actions.Add(new PlayerAction
                 {
                     HeliosBasicMove = new HeliosBasicMove()
                 });
+            }
         }
         else if (request.WorldModel.IsPenaltyKickMode)
         {
